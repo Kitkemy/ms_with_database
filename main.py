@@ -1,5 +1,5 @@
 import sys
-from methods import save_new_saldo
+from methods import save_new_saldo, save_new_store
 
 COMMANDS = "saldo", "zakup", "sprzedaz", "stop"
 
@@ -8,22 +8,25 @@ file_saldo = open('saldo.txt')
 saldo = float(file_saldo.readline())
 file_saldo.close()
 
-#store = [
-#    {'product_name': 'wiadro', 'count': 10, 'price': 15},
-#    {'product_name': 'kubek', 'count': 55, 'price': 10}
-#]
+store = []
+
 
 file_store = open('store.txt', 'r')
 for line in file_store.readlines():
-    splitted_line = print(line.split(';'))
+    splitted_line = line.split(';')
     product_name = splitted_line[0]
     product_count = splitted_line[1]
-    product_price = splitted_line[2]
-    product_dict = {'product_name': product_name,'count': product_count, 'price': product_price}
-    #1:11:44
+    product_price = splitted_line[2].replace('\n','')
+    product_dict = {
+        'product_name': product_name,
+        'count': product_count,
+        'price': product_price
+    }
+    store.append(product_dict)
 file_store.close()
-'''
-mode = sys.argv[1]
+print(store)
+
+#mode = sys.argv[1]
 
 logs = [] #historia operacji
 
@@ -34,6 +37,8 @@ while True:
         print("niepoprawna komenda!")
         continue
     if action == "stop":
+        save_new_saldo(saldo)
+        save_new_store(store)
         break
 
     if action == "saldo":
@@ -58,16 +63,34 @@ while True:
             continue
         else:
             saldo = saldo - product_total_price
-            if not store.get(product_name):
-                store[product_name] = {"count": product_count, "price": product_price}
-            else:
-                store_product_count = store[product_name]["count"]
-                store[product_name] = {
-                    "count": store_product_count + product_count,
-                    "price": product_price}
 
+            all_products = []
+
+            for products in store:
+                pro_name = products.get('product_name')
+                all_products.append(pro_name) 
+            if product_name in all_products:
+                product_index = all_products.index(product_name)
+                count_temp = store[product_index].get('count')
+                del store[product_index]
+                new_count = int(product_count) + int(count_temp)
+                product_dict = {
+                    'product_name': product_name,
+                    'count': str(new_count),
+                    'price': product_price
+                }
+                store.append(product_dict)
+            else:
+                product_dict = {
+                    'product_name': product_name,
+                    'count': product_count,
+                    'price': product_price
+                }
+                store.append(product_dict)
+            
         log = f"zakup: {product_name}, sztuk: {product_count}, cena za sztuke: {product_price}"
         logs.append(log)
+        
     elif action == "sprzedaz":
         product_name = input("Nazwa produktu: ")
         product_count = int(input("Ilość sztuk: "))
@@ -89,11 +112,12 @@ while True:
 
         if not store.get(product_name)['count']:
             del store[product_name]
-
+'''
 if mode == 'konto':
     print(f"saldo: {saldo}")
 elif mode == 'przeglad':
     print (logs)
+
 
 #saldo <int wartosc> <str komentarz>
 elif mode == "saldo":

@@ -3,3 +3,12 @@ def save_new_saldo(saldo):
     file_saldo = open('saldo.txt', 'w')
     file_saldo.write(new_saldo)
     file_saldo.close()
+
+def save_new_store(store):
+    file_store = open('store.txt', 'w')
+    for id in store:
+        product_name = id.get('product_name')
+        count =  str(id.get('count'))
+        price =  str(id.get('price'))
+        file_store.write(product_name + ";" + count + ";" + price + "\n")
+    file_store.close()
