@@ -12,3 +12,9 @@ def save_new_store(store):
         price =  str(id.get('price'))
         file_store.write(product_name + ";" + count + ";" + price + "\n")
     file_store.close()
+
+def save_new_logs(logs):
+    new_logs = str(logs)
+    file_logs = open('logs.txt', 'a')
+    file_logs.write(new_logs)
+    file_logs.close()

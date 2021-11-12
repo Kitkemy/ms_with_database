@@ -1,0 +1,1 @@
+['zmiana saldo: 1000000.0, komentarz /djdjd/']['zakup: plecak, sztuk: 1000, cena za sztuke: 500.0', 'sprzeda¿: plecak, sztuk 300, cane za sztukê 1000.0']['zmiana saldo: 1.0, komentarz /jiejffo//n', 'zmiana saldo: 3030.0, komentarz /diojd//n']

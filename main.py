@@ -1,5 +1,5 @@
 import sys
-from methods import save_new_saldo, save_new_store
+from methods import save_new_logs, save_new_saldo, save_new_store
 
 COMMANDS = "saldo", "zakup", "sprzedaz", "stop"
 
@@ -9,7 +9,7 @@ saldo = float(file_saldo.readline())
 file_saldo.close()
 
 store = []
-
+logs = [] #historia operacji
 
 file_store = open('store.txt', 'r')
 for line in file_store.readlines():
@@ -28,7 +28,6 @@ print(store)
 
 #mode = sys.argv[1]
 
-logs = [] #historia operacji
 
 while True:
     action = input("podaj komendę:")    
@@ -39,6 +38,7 @@ while True:
     if action == "stop":
         save_new_saldo(saldo)
         save_new_store(store)
+        save_new_logs(logs)
         break
 
     if action == "saldo":
@@ -95,23 +95,36 @@ while True:
         product_name = input("Nazwa produktu: ")
         product_count = int(input("Ilość sztuk: "))
         product_price = float(input("cena za sztukę: "))
-        if not store.get(product_name):
+        
+        all_products = []
+
+        for products in store:
+            pro_name = products.get('product_name')
+            all_products.append(pro_name)
+        
+        if product_name not in all_products:
             print("nie ma takiego produktu w sklepie")
             continue
-        if store.get(product_name)["count"] < product_count:
-            print("niewsyatrczająca ilość towaru")
+        
+        product_index = all_products.index(product_name)
+        count_temp = int(store[product_index].get('count'))
+        if count_temp < product_count:
+            print("niewsystrczająca ilość towaru")
             continue
-        store[product_name] = {
-            'count': store.get(product_name)['count'] - product_count,
+        
+        store[product_index] = {
+            'product_name': product_name,
+            'count': count_temp - product_count,
             'price': product_price
         }
+
         saldo += product_count * product_price
 
         log = f"sprzedaż: {product_name}, sztuk {product_count}, cane za sztukę {product_price}"
         logs.append(log)
 
-        if not store.get(product_name)['count']:
-            del store[product_name]
+        if (store[product_index].get('count')) == 0:
+            del store[product_index]
 '''
 if mode == 'konto':
     print(f"saldo: {saldo}")
