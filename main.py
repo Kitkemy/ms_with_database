@@ -26,7 +26,7 @@ for line in file_store.readlines():
 file_store.close()
 print(store)
 
-#mode = sys.argv[1]
+mode = sys.argv[1]
 
 
 while True:
@@ -125,27 +125,29 @@ while True:
 
         if (store[product_index].get('count')) == 0:
             del store[product_index]
-'''
+
 if mode == 'konto':
     print(f"saldo: {saldo}")
 elif mode == 'przeglad':
     print (logs)
-
-
-#saldo <int wartosc> <str komentarz>
+#saldo <str plik> <int wartosc> <str komentarz>
 elif mode == "saldo":
-    amount = float(sys.argv[2])
-    saldo_comment = sys.argv[3]
+    file = sys.argv[2]
+    amount = float(sys.argv[3])
+    saldo_comment = sys.argv[4]
     if amount < 0:
         if (amount < 0) and (saldo + amount < 0):
             print("za mało środków na koncie!")
-    saldo = saldo + amount
-
+    
+    file_saldo = open(file)
+    saldo_from_file = float(file_saldo.readline())
+    file_saldo.close()
+    
+    saldo = saldo + amount + saldo_from_file
     save_new_saldo(saldo)
-
     log = f"zmiana saldo: {amount}, komentarz /{saldo_comment}/"
     logs.append(log)
-
+'''
 #python accountant.py sprzedaż <str identyfikator produktu> <int cena> <int liczba sprzedanych>
 elif mode == "sprzedaz":
     product_name = sys.argv[2]
@@ -160,13 +162,10 @@ elif mode == "sprzedaz":
         'price': product_price
     }
     saldo += product_count * product_price
-
     log = f"sprzedaż: {product_name}, sztuk {product_count}, cane za sztukę {product_price}"
     logs.append(log)
-
     if not store.get(product_name)['count']:
         del store[product_name]
-
 #python accountant.py zakup <str identyfikator produktu> <int cena> <int liczba zakupionych>
 elif mode == "zakup":
     product_name = sys.argv[2]
@@ -184,10 +183,8 @@ elif mode == "zakup":
             store[product_name] = {
                 "count": store_product_count + product_count,
                 "price": product_price}
-
     log = f"zakup: {product_name}, sztuk: {product_count}, cena za sztuke: {product_price}"
     logs.append(log)   
-
 # python accountant.py magazyn <str identyfikator produktu 1> <str identyfikator produktu 2> <str identyfikator produktu 3> ...
 elif mode == "magazyn":
     n = len(sys.argv)
