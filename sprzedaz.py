@@ -18,27 +18,27 @@ for products in store:
 
 if product_name not in all_products:
     print("nie ma takiego produktu w sklepie")    
+else:
+    product_index = all_products.index(product_name)
+    count_temp = int(store[product_index].get('count'))
+    if count_temp < product_count:
+        print("niewsystrczająca ilość towaru")
+    else:
+        store[product_index] = {
+            'product_name': product_name,
+            'count': count_temp - product_count,
+            'price': product_price
+        }
 
-product_index = all_products.index(product_name)
-count_temp = int(store[product_index].get('count'))
-if count_temp < product_count:
-    print("niewsystrczająca ilość towaru")
+        saldo += product_count * product_price
 
-store[product_index] = {
-    'product_name': product_name,
-    'count': count_temp - product_count,
-    'price': product_price
-}
+        logs = []
+        log = f"sprzedaz: {product_name}, sztuk {product_count}, cena za sztuke {product_price}"
+        logs.append(log)
+        save_new_logs(logs)
 
-saldo += product_count * product_price
+        if (store[product_index].get('count')) == 0:
+            del store[product_index]
 
-logs = []
-log = f"sprzedaz: {product_name}, sztuk {product_count}, cena za sztuke {product_price}"
-logs.append(log)
-save_new_logs(logs)
-
-if (store[product_index].get('count')) == 0:
-    del store[product_index]
-
-save_new_saldo(saldo)
-save_new_store(store)
+        save_new_saldo(saldo)
+        save_new_store(store)
