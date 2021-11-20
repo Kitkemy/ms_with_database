@@ -24,3 +24,20 @@ def get_saldo(file_name):
     saldo = float(file_saldo.readline())
     file_saldo.close()
     return saldo
+
+def get_store(file_name):
+    store = []
+    file_store = open(file_name, 'r')
+    for line in file_store.readlines():
+        splitted_line = line.split(';')
+        product_name = splitted_line[0]
+        product_count = splitted_line[1]
+        product_price = splitted_line[2].replace('\n','')
+        product_dict = {
+            'product_name': product_name,
+            'count': product_count,
+            'price': product_price
+        }
+        store.append(product_dict)
+    file_store.close()
+    return store
