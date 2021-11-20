@@ -1,4 +1,4 @@
 kubek;55;10.0
-woda;50;1.0
 fasola;12;10.0
 wiadro;2;2.0
+woda;50;2.0
