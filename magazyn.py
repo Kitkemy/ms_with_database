@@ -16,5 +16,3 @@ for i in range(2, n):
     product_name = sys.argv[i]
     product_index = all_products.index(product_name)
     print(f"{product_name} {store[product_index].get('count')}")
-   
-   
