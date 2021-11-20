@@ -1,1 +1,1 @@
-['zmiana saldo: 100.0, komentarz /asas/']
+['zmiana saldo: 1000.0, komentarz /kredyt/']['zmiana saldo: 1000.0, komentarz /kredyt2/']

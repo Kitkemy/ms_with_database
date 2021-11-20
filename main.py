@@ -24,9 +24,8 @@ for line in file_store.readlines():
     }
     store.append(product_dict)
 file_store.close()
-print(store)
 
-mode = sys.argv[1]
+#mode = sys.argv[1]
 
 
 while True:
@@ -125,7 +124,7 @@ while True:
 
         if (store[product_index].get('count')) == 0:
             del store[product_index]
-
+'''
 if mode == 'konto':
     print(f"saldo: {saldo}")
 elif mode == 'przeglad':
@@ -143,29 +142,69 @@ elif mode == "saldo":
     saldo_from_file = float(file_saldo.readline())
     file_saldo.close()
     
-    saldo = saldo + amount + saldo_from_file
-    save_new_saldo(saldo)
+    saldo = amount + saldo_from_file
+
     log = f"zmiana saldo: {amount}, komentarz /{saldo_comment}/"
     logs.append(log)
-'''
-#python accountant.py sprzedaż <str identyfikator produktu> <int cena> <int liczba sprzedanych>
+
+    save_new_saldo(saldo)
+    save_new_store(store)
+    save_new_logs(logs)
+
+# python sprzedaz.py <str plik> <str identyfikator produktu> <int cena> <int liczba sprzedanych>
 elif mode == "sprzedaz":
-    product_name = sys.argv[2]
-    product_price = float(sys.argv[3])
-    product_count = int(sys.argv[4])
-    if not store.get(product_name):
+    file_name = sys.argv[2]
+    product_name = sys.argv[3]
+    product_price = float(sys.argv[4])
+    product_count = int(sys.argv[5])
+    
+
+    store_file = []
+
+    file_store = open(file_name, 'r')
+    for line in file_store.readlines():
+        splitted_line = line.split(';')
+        product_name = splitted_line[0]
+        product_count = int(splitted_line[1])
+        product_price = float(splitted_line[2].replace('\n',''))
+        product_dict = {
+            'product_name': product_name,
+            'count': product_count,
+            'price': product_price
+        }
+        store.append(product_dict)
+    file_store.close()
+    
+    all_products = []
+
+    for products in store:
+        pro_name = products.get('product_name')
+        all_products.append(pro_name)
+    
+    if product_name not in all_products:
         print("nie ma takiego produktu w sklepie")
-    if store.get(product_name)["count"] < product_count:
-        print("niewsyatrczająca ilość towaru")
-    store[product_name] = {
-        'count': store.get(product_name)['count'] - product_count,
+    
+    product_index = all_products.index(product_name)
+    count_temp = int(store[product_index].get('count'))
+    if count_temp < product_count:
+        print("niewsystrczająca ilość towaru")
+    
+    store[product_index] = {
+        'product_name': product_name,
+        'count': count_temp - product_count,
         'price': product_price
     }
+
     saldo += product_count * product_price
+
     log = f"sprzedaż: {product_name}, sztuk {product_count}, cane za sztukę {product_price}"
     logs.append(log)
-    if not store.get(product_name)['count']:
-        del store[product_name]
+
+    if (store[product_index].get('count')) == 0:
+        del store[product_index]
+    
+    
+
 #python accountant.py zakup <str identyfikator produktu> <int cena> <int liczba zakupionych>
 elif mode == "zakup":
     product_name = sys.argv[2]

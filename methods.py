@@ -18,3 +18,9 @@ def save_new_logs(logs):
     file_logs = open('logs.txt', 'a')
     file_logs.write(new_logs)
     file_logs.close()
+
+def get_saldo(file_name):
+    file_saldo = open(file_name)
+    saldo = float(file_saldo.readline())
+    file_saldo.close()
+    return saldo

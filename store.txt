@@ -1,5 +1,4 @@
-wiadro;10;15
-kubek;55;10
+wiadro;10;20.0
+kubek;55;10.0
 fasola;34;5.6
 woda;50;1.0
-plecak;700;1000.0
